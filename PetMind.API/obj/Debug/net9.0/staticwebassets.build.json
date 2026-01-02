@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "58YAKRHgGiPH7CGakaR4MCS1z6b6rbKuvSSnZxokTpM=",
+  "Source": "PetMind.API",
+  "BasePath": "_content/PetMind.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
