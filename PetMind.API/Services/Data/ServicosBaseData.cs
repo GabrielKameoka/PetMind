@@ -12,7 +12,7 @@ public class ServicosBaseData
             new ServicoBase
             {
                 Porte = "Pequeno",
-                Raca = "Vira-lata",
+                Raca = "Vira lata",
                 Servicos = new Dictionary<string, decimal>
                 {
                     ["Banho"] = 60.00m,
@@ -143,7 +143,7 @@ public class ServicosBaseData
             new ServicoBase
             {
                 Porte = "Médio",
-                Raca = "Vira-lata",
+                Raca = "Vira lata",
                 Servicos = new Dictionary<string, decimal>
                 {
                     ["Banho"] = 60.00m,
@@ -207,7 +207,7 @@ public class ServicosBaseData
             new ServicoBase
             {
                 Porte = "Grande",
-                Raca = "Vira-lata",
+                Raca = "Vira lata",
                 Servicos = new Dictionary<string, decimal>
                 {
                     ["Banho"] = 90.00m,

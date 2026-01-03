@@ -155,3 +155,7 @@
 /Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
 /Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/mitsurukameoka/dev/PetMind/PetMind.API/obj/Debug/net9.0/PetMind.API.sourcelink.json
+/Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/AutoMapper.dll
+/Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+/Users/mitsurukameoka/dev/PetMind/PetMind.API/bin/Debug/net9.0/BCrypt.Net-Next.dll

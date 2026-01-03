@@ -7,8 +7,10 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<CalculaPrecosService>();
+builder.Services.AddScoped<IValidacaoService, ValidacaoService>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

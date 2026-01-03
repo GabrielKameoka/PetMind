@@ -8,7 +8,7 @@ namespace PetMind.API.Models.Entities
         public int Id { get; set; }
         
         [Required]
-        public List<int> CachorroIds { get; set; } = new List<int>();
+        public int CachorroId { get; set; }
         
         [Required]
         public int PetShopId { get; set; }
