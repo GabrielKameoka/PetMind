@@ -14,16 +14,16 @@ public class CachorrosController : ControllerBase
 {
     private readonly AppDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IValidacaoService _validacaoService;
+    private readonly IValidaRacaService _validacaoService;
 
-    public CachorrosController(AppDbContext context, IMapper mapper, IValidacaoService validacaoService)
+    public CachorrosController(AppDbContext context, IMapper mapper, IValidaRacaService validacaoService)
     {
         _context = context;
         _mapper = mapper;
         _validacaoService = validacaoService;
     }
-    
 
+    // GET: api/Cachorros
     [HttpGet]
     public async Task<ActionResult<List<CachorroResponseDto>>> GetAll()
     {
@@ -31,8 +31,8 @@ public class CachorrosController : ControllerBase
         var response = _mapper.Map<List<CachorroResponseDto>>(cachorros);
         return Ok(response);
     }
-    
 
+    // GET: api/Cachorros/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<CachorroResponseDto>> GetById(int id)
     {
@@ -42,12 +42,49 @@ public class CachorrosController : ControllerBase
         return Ok(_mapper.Map<CachorroResponseDto>(cachorro));
     }
     
+    // GET: api/Cachorros/{id}/PetShops
+    [HttpGet("{id}/PetShops")]
+    public async Task<ActionResult<List<CachorroResponseDto>>> GetByPetShopId(int id)
+    {
+        var petShopExiste = await _context.PetShops.AnyAsync(p => p.Id == id);
+        if (!petShopExiste)
+        {
+            return NotFound(new { Message = $"PetShop com ID {id} não encontrado." });
+        }
 
+        var cachorros = await _context.Cachorros
+            .Where(c => c.PetShopId == id)
+            .ToListAsync();
+
+        if (!cachorros.Any())
+        {
+            return Ok(new List<CachorroResponseDto>());
+        }
+
+        var response = _mapper.Map<List<CachorroResponseDto>>(cachorros);
+        return Ok(response);
+    }
+
+    // POST: api/Cachorros
     [HttpPost]
-    public async Task<ActionResult<CachorroResponseDto>> Post(CreateCachorroDto dto)
+    public async Task<ActionResult<CachorroResponseDto>> Create(CreateCachorroDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+        
+        if (dto.PetShopId > 0)
+        {
+            var petShopExiste = await _context.PetShops.AnyAsync(p => p.Id == dto.PetShopId);
+            if (!petShopExiste)
+            {
+                return BadRequest(new
+                {
+                    Message = $"PetShop com ID {dto.PetShopId} não encontrado.",
+                    PetShopsDisponiveis = await _context.PetShops.Select(p => new { p.Id, p.Email }).ToListAsync()
+                });
+            }
+        }
+        
         // Validação customizada da raça
         if (!_validacaoService.RacaValida(dto.Raca))
         {
@@ -79,6 +116,19 @@ public class CachorrosController : ControllerBase
                 RacasDisponiveisParaPorte = racasParaPorte
             });
         }
+        
+        if (dto.PetShopId > 0)
+        {
+            var petShopExiste = await _context.PetShops.AnyAsync(p => p.Id == dto.PetShopId);
+            if (!petShopExiste)
+            {
+                return BadRequest(new
+                {
+                    Message = $"PetShop com ID {dto.PetShopId} não encontrado.",
+                    PetShopsDisponiveis = await _context.PetShops.Select(p => new { p.Id, p.Email }).ToListAsync()
+                });
+            }
+        }
 
         var cachorro = _mapper.Map<Cachorro>(dto);
 
@@ -92,8 +142,8 @@ public class CachorrosController : ControllerBase
             new { id = cachorro.Id },
             responseDto);
     }
-    
 
+    // PUT: api/Cachorros/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateCachorroDto dto)
     {
@@ -104,20 +154,20 @@ public class CachorrosController : ControllerBase
         if (dto.Raca != null && !_validacaoService.RacaValida(dto.Raca))
         {
             var racasValidas = _validacaoService.GetRacasValidas();
-            return BadRequest(new 
-            { 
+            return BadRequest(new
+            {
                 Message = $"Raça '{dto.Raca}' não é válida.",
-                RacasValidas = racasValidas 
+                RacasValidas = racasValidas
             });
         }
 
         // Valida porte se foi fornecido
         if (dto.Porte != null && !_validacaoService.PorteValido(dto.Porte))
         {
-            return BadRequest(new 
-            { 
+            return BadRequest(new
+            {
                 Message = $"Porte '{dto.Porte}' não é válido.",
-                PortesValidos = new[] { "Pequeno", "Médio", "Grande" } 
+                PortesValidos = new[] { "Pequeno", "Médio", "Grande" }
             });
         }
 
@@ -126,20 +176,20 @@ public class CachorrosController : ControllerBase
             !_validacaoService.RacaCompativelComPorte(dto.Raca, dto.Porte))
         {
             var racasParaPorte = _validacaoService.GetRacasPorPorte(dto.Porte);
-            return BadRequest(new 
-            { 
+            return BadRequest(new
+            {
                 Message = $"Raça '{dto.Raca}' não está disponível para porte '{dto.Porte}'.",
-                RacasDisponiveisParaPorte = racasParaPorte 
+                RacasDisponiveisParaPorte = racasParaPorte
             });
         }
 
         _mapper.Map(dto, cachorro);
         await _context.SaveChangesAsync();
-        
+
         return Ok(_mapper.Map<CachorroResponseDto>(cachorro));
     }
-    
 
+    // DELETE: api/Cachorros/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

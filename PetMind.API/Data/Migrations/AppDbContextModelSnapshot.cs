@@ -22,21 +22,6 @@ namespace PetMind.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CachorroHorario", b =>
-                {
-                    b.Property<int>("CachorrosId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HorarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CachorrosId", "HorarioId");
-
-                    b.HasIndex("HorarioId");
-
-                    b.ToTable("HorarioCachorros", (string)null);
-                });
-
             modelBuilder.Entity("PetMind.API.Models.Entities.Cachorro", b =>
                 {
                     b.Property<int>("Id")
@@ -61,6 +46,9 @@ namespace PetMind.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PetShopId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Porte")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -70,6 +58,8 @@ namespace PetMind.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PetShopId");
 
                     b.ToTable("Cachorros");
                 });
@@ -100,10 +90,11 @@ namespace PetMind.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ValorTotal")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CachorroId");
 
                     b.HasIndex("PetShopId");
 
@@ -135,25 +126,10 @@ namespace PetMind.API.Migrations
                     b.ToTable("PetShops");
                 });
 
-            modelBuilder.Entity("CachorroHorario", b =>
-                {
-                    b.HasOne("PetMind.API.Models.Entities.Cachorro", null)
-                        .WithMany()
-                        .HasForeignKey("CachorrosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PetMind.API.Models.Entities.Horario", null)
-                        .WithMany()
-                        .HasForeignKey("HorarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PetMind.API.Models.Entities.Horario", b =>
+            modelBuilder.Entity("PetMind.API.Models.Entities.Cachorro", b =>
                 {
                     b.HasOne("PetMind.API.Models.Entities.PetShop", "PetShop")
-                        .WithMany("Horarios")
+                        .WithMany("Cachorros")
                         .HasForeignKey("PetShopId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -161,8 +137,29 @@ namespace PetMind.API.Migrations
                     b.Navigation("PetShop");
                 });
 
+            modelBuilder.Entity("PetMind.API.Models.Entities.Horario", b =>
+                {
+                    b.HasOne("PetMind.API.Models.Entities.Cachorro", "Cachorro")
+                        .WithMany()
+                        .HasForeignKey("CachorroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PetMind.API.Models.Entities.PetShop", "PetShop")
+                        .WithMany("Horarios")
+                        .HasForeignKey("PetShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cachorro");
+
+                    b.Navigation("PetShop");
+                });
+
             modelBuilder.Entity("PetMind.API.Models.Entities.PetShop", b =>
                 {
+                    b.Navigation("Cachorros");
+
                     b.Navigation("Horarios");
                 });
 #pragma warning restore 612, 618

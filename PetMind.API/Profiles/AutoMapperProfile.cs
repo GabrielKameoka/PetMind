@@ -3,6 +3,7 @@ using PetMind.API.Models.DTOs.Cachorros;
 using PetMind.API.Models.DTOs.Horarios;
 using PetMind.API.Models.DTOs.PetShops;
 using PetMind.API.Models.Entities;
+using System.Globalization;
 
 namespace PetMind.API.Profiles
 {
@@ -22,17 +23,24 @@ namespace PetMind.API.Profiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             
             CreateMap<Horario, HorarioResponseDto>()
+                .ForMember(dest => dest.Data, opt => opt.MapFrom(src => 
+                    src.Data.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.GetCultureInfo("pt-BR"))))
+                .ForMember(dest => dest.ValorTotal, opt => opt.MapFrom(src => src.ValorTotal))
                 .ForMember(dest => dest.Cachorro, opt => opt.MapFrom(src => 
-                    src.Cachorros != null && src.Cachorros.Any() 
-                        ? src.Cachorros.First() 
-                        : null))
+                    src.Cachorro != null ? src.Cachorro : null))
                 .ForMember(dest => dest.PetShop, opt => opt.MapFrom(src => src.PetShop));
 
-            // PetShop
+            // PetShop - MAPEAMENTOS SEPARADOS
             CreateMap<CreatePetShopDto, PetShop>();
             CreateMap<UpdatePetShopDto, PetShop>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<PetShop, PetShopResponseDto>();
+            
+            // Para lista geral (sem horários)
+            CreateMap<PetShop, PetShopBasicDto>();
+            
+            // Para detalhes (com horários) - USANDO HorarioResponseDto
+            CreateMap<PetShop, PetShopResponseDto>()
+                .ForMember(dest => dest.Horarios, opt => opt.MapFrom(src => src.Horarios));
 
             // Mapeamentos auxiliares para DTOs aninhados
             CreateMap<Cachorro, CachorroInfoDto>()
@@ -40,7 +48,9 @@ namespace PetMind.API.Profiles
                 .ForMember(dest => dest.NomeTutor, opt => opt.MapFrom(src => src.NomeTutor))
                 .ForMember(dest => dest.ContatoTutor, opt => opt.MapFrom(src => src.ContatoTutor));
 
-            CreateMap<PetShop, PetShopInfoDto>();
+            CreateMap<PetShop, PetShopInfoDto>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.EnderecoPetShop, opt => opt.MapFrom(src => src.EnderecoPetShop));
         }
     }
 }

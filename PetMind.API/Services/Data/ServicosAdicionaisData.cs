@@ -9,7 +9,7 @@ namespace PetMind.API.Services.Data
                 ["Escovação de Dente"] = new Dictionary<string, decimal> { ["P"] = 15, ["M"] = 15, ["G"] = 15 },
                 ["Desembolo"] = new Dictionary<string, decimal> { ["P"] = 15, ["M"] = 25, ["G"] = 60 },
                 ["Hidratação"] = new Dictionary<string, decimal> { ["P"] = 20, ["M"] = 25, ["G"] = 30 },
-                ["TaxiDog"] = new Dictionary<string, decimal> { ["P"] = 15, ["M"] = 15, ["G"] = 15 },
+                ["Taxi Dog"] = new Dictionary<string, decimal> { ["P"] = 15, ["M"] = 15, ["G"] = 15 },
                 ["Cortar Unha"] = new Dictionary<string, decimal> { ["P"] = 5, ["M"] = 10, ["G"] = 10 }
             };
         }

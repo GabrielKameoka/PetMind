@@ -4,17 +4,13 @@ namespace PetMind.API.Models.DTOs.Horarios;
 
 public class CreateHorarioDto
 {
-    [Range(1, int.MaxValue, ErrorMessage = "ID do cachorro inválido")]
-    public int CachorroId { get; set; }
+    [Required] public int CachorroId { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "ID do petshop inválido")]
-    public int PetShopId { get; set; }
+    [Required] public int PetShopId { get; set; }
 
-    [Required(ErrorMessage = "Data é obrigatória")]
-    public DateTime Data { get; set; }
+    [Required] public required string Data { get; set; }
 
-    [Required(ErrorMessage = "Serviço base é obrigatório")]
-    public string ServicoBaseSelecionado { get; set; } = string.Empty;
+    [Required] public required string ServicoBaseSelecionado { get; set; }
 
     public List<string> Adicionais { get; set; } = new();
 }

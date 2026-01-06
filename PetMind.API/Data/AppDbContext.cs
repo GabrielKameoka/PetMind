@@ -13,12 +13,15 @@ namespace PetMind.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuração do Horario
             modelBuilder.Entity<Horario>(entity =>
             {
-                // Propriedades normais
-                entity.Property(h => h.ServicoBaseSelecionado).IsRequired();
-                entity.Property(h => h.Data).IsRequired();
-                
+                // Relacionamento com Cachorro (1:1)
+                entity.HasOne(h => h.Cachorro)
+                    .WithMany() // Um cachorro pode ter vários horários
+                    .HasForeignKey(h => h.CachorroId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            
                 // Relacionamento com PetShop
                 entity.HasOne(h => h.PetShop)
                     .WithMany(p => p.Horarios)
@@ -26,16 +29,16 @@ namespace PetMind.API.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Configura o relacionamento muitos-para-muitos
-            modelBuilder.Entity<Horario>()
-                .HasMany(h => h.Cachorros)
-                .WithMany()
-                .UsingEntity(j => j.ToTable("HorarioCachorros"));
-
-            // Configura decimal
-            modelBuilder.Entity<Horario>()
-                .Property(h => h.ValorTotal)
-                .HasPrecision(18, 2);
+            // Configuração do Cachorro
+            modelBuilder.Entity<Cachorro>(entity =>
+            {
+                // Relacionamento com PetShop
+                entity.HasOne(c => c.PetShop)
+                    .WithMany(p => p.Cachorros)
+                    .HasForeignKey(c => c.PetShopId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
+
     }
 }
