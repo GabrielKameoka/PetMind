@@ -118,6 +118,9 @@ builder.Services.AddScoped<IValidaRacaService, ValidaRacaService>();
 builder.Services.AddScoped<CalculaPrecosService>();
 builder.Services.AddScoped<IAuthService, AuthService>(); // Adicionar serviço de autenticação
 
+// No método ConfigureServices (no Program.cs)
+builder.Services.AddHttpContextAccessor();
+
 // Configurar CORS (se precisar de frontend)
 builder.Services.AddCors(options =>
 {

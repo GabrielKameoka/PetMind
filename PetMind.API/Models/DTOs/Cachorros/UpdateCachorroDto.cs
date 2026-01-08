@@ -20,7 +20,5 @@ namespace PetMind.API.Models.DTOs.Cachorros
 
         [RegularExpression("^(Pequeno|Médio|Grande)$", ErrorMessage = "Porte deve ser Pequeno, Médio ou Grande")]
         public string Porte { get; set; }
-        
-        public int PetShopId { get; set; }
     }
 }

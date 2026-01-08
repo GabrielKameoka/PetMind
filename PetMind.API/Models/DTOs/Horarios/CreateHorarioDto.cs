@@ -6,8 +6,6 @@ public class CreateHorarioDto
 {
     [Required] public int CachorroId { get; set; }
 
-    [Required] public int PetShopId { get; set; }
-
     [Required] public required string Data { get; set; }
 
     [Required] public required string ServicoBaseSelecionado { get; set; }
