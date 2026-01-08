@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetMind.API.Data;
@@ -11,6 +12,7 @@ namespace PetMind.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class HorariosController : ControllerBase
 {
     private readonly AppDbContext _context;

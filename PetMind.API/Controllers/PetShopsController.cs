@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace PetMind.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PetShopsController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -46,6 +48,7 @@ public class PetShopsController : ControllerBase
 
     // POST: api/petshops/
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ActionResult<PetShopResponseDto>> Create(CreatePetShopDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -68,6 +71,13 @@ public class PetShopsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<PetShopResponseDto>> Update(int id, UpdatePetShopDto dto)
     {
+        //Verificar se o usuário está tentando editar seu próprio perfil
+        var petShopIdClaim = User.FindFirst("PetShopId")?.Value;
+        if (petShopIdClaim == null || !int.TryParse(petShopIdClaim, out int currentPetShopId))
+        {
+            return Unauthorized(new { Message = "Token inválido" });
+        }
+        
         var petShop = await _context.PetShops.FindAsync(id);
         if (petShop == null) return NotFound();
 
